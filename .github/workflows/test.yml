@@ -1,0 +1,43 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: --name=mongo_test
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Wait for MongoDB to be Ready
+        run: sleep 10 # Ensures MongoDB is fully started
+
+      - name: Run Tests
+        env:
+          MONGO_URI: mongodb://localhost:27017/testdb
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npm test
+
+      - name: Cleanup MongoDB
+        if: always()
+        run: docker stop mongo_test || true
