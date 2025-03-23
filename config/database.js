@@ -1,4 +1,6 @@
+require('dotenv').config();  
+
 module.exports = {
-    database: 'mongodb://localhost/book_reservation_app',
-    secret: 'your_jwt_secret'
-  };
+  database: process.env.MONGO_URI, 
+  secret: process.env.JWT_SECRET  
+};
