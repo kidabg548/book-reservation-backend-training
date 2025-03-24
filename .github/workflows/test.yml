@@ -1,4 +1,4 @@
-name: Backend Tests
+name: Backend CI/CD
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
       - name: Install Node.js with nvm
         uses: actions/setup-node@v3
         with:
-          node-version: "22.14.0" 
+          node-version: "22.14.0"
 
       - name: Install Dependencies
         run: npm ci
@@ -41,3 +41,11 @@ jobs:
       - name: Cleanup MongoDB
         if: always()
         run: docker stop mongo_test || true
+
+  deploy:
+    needs: test 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Render
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
