@@ -1,4 +1,4 @@
-name: Backend CI/CD
+name: Backend Tests & Deployment
 
 on:
   push:
@@ -43,9 +43,15 @@ jobs:
         run: docker stop mongo_test || true
 
   deploy:
-    needs: test 
+    needs: test
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to Render
+      - name: Trigger Render Deployment
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          curl -X GET "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+      - name: Print Deployed Service URL
+        run: |
+          echo "🚀 Deployment Successful!"
+          echo "🔗 Access the backend at: ${{ secrets.RENDER_SERVICE_URL }}"
