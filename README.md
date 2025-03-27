@@ -25,7 +25,6 @@ To set up the project locally, follow these steps:
 1. **Clone the repository**
    ```sh
    git clone https://github.com/kidabg548/book-reservation-backend-training.git
-   cd your-repo
    ```
 2. **Install dependencies**
    ```sh
